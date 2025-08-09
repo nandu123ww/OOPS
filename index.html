@@ -1,0 +1,2071 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroShop - Premium Electronics Store</title>
+    
+    <!-- External Libraries -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Custom Styles -->
+    <style>
+        /* ===========================================
+           CUSTOM CSS STYLES
+           =========================================== */
+        
+        /* Hero Section Gradient Background */
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        /* Product Card Hover Effects */
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* Category Card Background */
+        .category-card {
+            background: linear-gradient(45deg, #f8fafc, #e2e8f0);
+            transition: all 0.3s ease;
+        }
+        
+        .category-card:hover {
+            background: linear-gradient(45deg, #e2e8f0, #cbd5e1);
+        }
+        
+        /* Price Tag Gradient */
+        .price-tag {
+            background: linear-gradient(45deg, #4f46e5, #7c3aed);
+        }
+        
+        /* Navigation Dropdown Animation */
+        .dropdown-menu {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        /* Loading Animation */
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 2s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Button Animations */
+        .btn-primary {
+            background: linear-gradient(45deg, #3b82f6, #1d4ed8);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(45deg, #1d4ed8, #1e40af);
+            transform: translateY(-2px);
+        }
+        
+        /* Form Input Focus Effects */
+        .form-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        /* Badge Styles */
+        .badge-new { background: linear-gradient(45deg, #10b981, #059669); }
+        .badge-sale { background: linear-gradient(45deg, #ef4444, #dc2626); }
+        .badge-popular { background: linear-gradient(45deg, #3b82f6, #1d4ed8); }
+        .badge-bestseller { background: linear-gradient(45deg, #8b5cf6, #7c3aed); }
+        
+        /* Responsive Design Helpers */
+        @media (max-width: 768px) {
+            .hero-gradient h1 {
+                font-size: 2.5rem;
+            }
+            
+            .category-card {
+                padding: 1rem;
+            }
+        }
+        
+        /* Dark Mode Support (Optional) */
+        @media (prefers-color-scheme: dark) {
+            .bg-white {
+                background-color: #1f2937;
+                color: #f9fafb;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Application Container -->
+    <div id="root"></div>
+
+    <script type="text/babel">
+        /* ===========================================
+           REACT APPLICATION JAVASCRIPT
+           =========================================== */
+        
+        const { useState, useEffect } = React;
+
+        /* ===========================================
+           DATA MODELS AND INITIAL STATE
+           =========================================== */
+        
+        // Enhanced product data with comprehensive details
+        const initialProducts = [
+            { 
+                id: 1, 
+                name: "iPhone 15 Pro Max", 
+                price: 1199, 
+                originalPrice: 1299,
+                category: "Smartphones", 
+                image: "📱", 
+                description: "Latest iPhone with titanium design and advanced camera system",
+                rating: 4.8,
+                reviews: 324,
+                inStock: true,
+                badge: "New",
+                features: ["A17 Pro Chip", "48MP Camera", "Titanium Build", "USB-C"]
+            },
+            { 
+                id: 2, 
+                name: "MacBook Pro 14\"", 
+                price: 1999, 
+                originalPrice: 2199,
+                category: "Laptops", 
+                image: "💻", 
+                description: "Powerful laptop with M3 chip for professionals",
+                rating: 4.9,
+                reviews: 156,
+                inStock: true,
+                badge: "Sale",
+                features: ["M3 Pro Chip", "18-hour battery", "Liquid Retina XDR", "16GB RAM"]
+            },
+            { 
+                id: 3, 
+                name: "AirPods Pro 2nd Gen", 
+                price: 249, 
+                originalPrice: 279,
+                category: "Audio", 
+                image: "🎧", 
+                description: "Premium wireless earbuds with adaptive transparency",
+                rating: 4.7,
+                reviews: 892,
+                inStock: true,
+                badge: "Popular",
+                features: ["Active Noise Cancellation", "Spatial Audio", "6-hour battery", "MagSafe Case"]
+            },
+            { 
+                id: 4, 
+                name: "iPad Pro 12.9\"", 
+                price: 1099, 
+                originalPrice: 1199,
+                category: "Tablets", 
+                image: "📱", 
+                description: "Professional tablet with M2 chip and Liquid Retina display",
+                rating: 4.6,
+                reviews: 203,
+                inStock: true,
+                badge: "",
+                features: ["M2 Chip", "12.9\" Display", "Apple Pencil Support", "5G Ready"]
+            },
+            { 
+                id: 5, 
+                name: "Apple Watch Ultra 2", 
+                price: 799, 
+                originalPrice: 849,
+                category: "Wearables", 
+                image: "⌚", 
+                description: "Rugged smartwatch for extreme sports and adventures",
+                rating: 4.8,
+                reviews: 445,
+                inStock: false,
+                badge: "Out of Stock",
+                features: ["Titanium Case", "GPS + Cellular", "Water Resistant", "Action Button"]
+            },
+            { 
+                id: 6, 
+                name: "Samsung OLED 65\"", 
+                price: 1899, 
+                originalPrice: 2199,
+                category: "TVs", 
+                image: "📺", 
+                description: "Premium 4K OLED Smart TV with quantum dot technology",
+                rating: 4.5,
+                reviews: 178,
+                inStock: true,
+                badge: "Best Seller",
+                features: ["4K OLED", "120Hz", "Smart TV", "HDR10+"]
+            },
+            { 
+                id: 7, 
+                name: "Sony WH-1000XM5", 
+                price: 399, 
+                originalPrice: 449,
+                category: "Audio", 
+                image: "🎧", 
+                description: "Industry-leading noise canceling wireless headphones",
+                rating: 4.7,
+                reviews: 567,
+                inStock: true,
+                badge: "",
+                features: ["30-hour battery", "Quick Charge", "Multipoint Connection", "Touch Controls"]
+            },
+            { 
+                id: 8, 
+                name: "Nintendo Switch OLED", 
+                price: 349, 
+                originalPrice: 379,
+                category: "Gaming", 
+                image: "🎮", 
+                description: "Portable gaming console with vibrant OLED screen",
+                rating: 4.6,
+                reviews: 723,
+                inStock: true,
+                badge: "",
+                features: ["7\" OLED Screen", "64GB Storage", "Enhanced Audio", "Dock Included"]
+            }
+        ];
+
+        // Product categories with metadata
+        const categories = [
+            { name: "Smartphones", icon: "📱", count: 2, color: "bg-blue-100 text-blue-800" },
+            { name: "Laptops", icon: "💻", count: 1, color: "bg-purple-100 text-purple-800" },
+            { name: "Audio", icon: "🎧", count: 2, color: "bg-green-100 text-green-800" },
+            { name: "Tablets", icon: "📱", count: 1, color: "bg-orange-100 text-orange-800" },
+            { name: "Wearables", icon: "⌚", count: 1, color: "bg-pink-100 text-pink-800" },
+            { name: "TVs", icon: "📺", count: 1, color: "bg-indigo-100 text-indigo-800" },
+            { name: "Gaming", icon: "🎮", count: 1, color: "bg-red-100 text-red-800" }
+        ];
+
+        // Sample orders data for demonstration
+        const initialOrders = [
+            { 
+                id: 1, 
+                customer: "john@email.com", 
+                items: [{ name: "iPhone 15 Pro Max", quantity: 1, price: 1199 }], 
+                total: 1199, 
+                date: "2024-01-15", 
+                status: "Delivered" 
+            },
+            { 
+                id: 2, 
+                customer: "jane@email.com", 
+                items: [{ name: "MacBook Pro 14\"", quantity: 1, price: 1999 }], 
+                total: 1999, 
+                date: "2024-01-14", 
+                status: "Shipped" 
+            }
+        ];
+
+        /* ===========================================
+           MAIN APPLICATION COMPONENT
+           =========================================== */
+        
+        function App() {
+            // State management for the entire application
+            const [currentView, setCurrentView] = useState('home');
+            const [selectedProduct, setSelectedProduct] = useState(null);
+            const [products, setProducts] = useState(initialProducts);
+            const [cart, setCart] = useState([]);
+            const [orders, setOrders] = useState(initialOrders);
+            const [user, setUser] = useState(null);
+            const [isAdmin, setIsAdmin] = useState(false);
+            const [editingProduct, setEditingProduct] = useState(null);
+            const [selectedCategory, setSelectedCategory] = useState('All');
+            const [sortBy, setSortBy] = useState('name');
+
+            /* ===========================================
+               PRODUCT FILTERING AND SORTING LOGIC
+               =========================================== */
+            
+            // Filter products by category and sort them
+            const filteredProducts = products
+                .filter(product => selectedCategory === 'All' || product.category === selectedCategory)
+                .sort((a, b) => {
+                    switch(sortBy) {
+                        case 'price-low': return a.price - b.price;
+                        case 'price-high': return b.price - a.price;
+                        case 'rating': return b.rating - a.rating;
+                        default: return a.name.localeCompare(b.name);
+                    }
+                });
+
+            /* ===========================================
+               SHOPPING CART MANAGEMENT FUNCTIONS
+               =========================================== */
+            
+            // Add product to cart or increase quantity if already exists
+            const addToCart = (product) => {
+                const existingItem = cart.find(item => item.id === product.id);
+                if (existingItem) {
+                    setCart(cart.map(item => 
+                        item.id === product.id 
+                            ? { ...item, quantity: item.quantity + 1 }
+                            : item
+                    ));
+                } else {
+                    setCart([...cart, { ...product, quantity: 1 }]);
+                }
+            };
+
+            // Update quantity of item in cart
+            const updateQuantity = (id, quantity) => {
+                if (quantity === 0) {
+                    setCart(cart.filter(item => item.id !== id));
+                } else {
+                    setCart(cart.map(item => 
+                        item.id === id ? { ...item, quantity } : item
+                    ));
+                }
+            };
+
+            // Calculate total price of items in cart
+            const getCartTotal = () => {
+                return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            };
+
+            // Calculate total number of items in cart
+            const getCartCount = () => {
+                return cart.reduce((total, item) => total + item.quantity, 0);
+            };
+
+            /* ===========================================
+               PRODUCT MANAGEMENT FUNCTIONS (ADMIN)
+               =========================================== */
+            
+            // Add new product to the store
+            const addProduct = (product) => {
+                const newProduct = {
+                    ...product,
+                    id: Math.max(...products.map(p => p.id)) + 1,
+                    rating: 4.5,
+                    reviews: 0,
+                    inStock: true,
+                    features: []
+                };
+                setProducts([...products, newProduct]);
+            };
+
+            // Update existing product
+            const updateProduct = (updatedProduct) => {
+                setProducts(products.map(p => 
+                    p.id === updatedProduct.id ? updatedProduct : p
+                ));
+                setEditingProduct(null);
+            };
+
+            // Delete product from store
+            const deleteProduct = (id) => {
+                setProducts(products.filter(p => p.id !== id));
+            };
+
+            /* ===========================================
+               ORDER MANAGEMENT FUNCTIONS
+               =========================================== */
+            
+            // Update order status (admin function)
+            const updateOrderStatus = (orderId, newStatus) => {
+                setOrders(orders.map(order => 
+                    order.id === orderId ? { ...order, status: newStatus } : order
+                ));
+            };
+
+            /* ===========================================
+               NAVIGATION COMPONENT
+               =========================================== */
+            
+            const Navbar = () => (
+                <nav className="bg-white shadow-lg sticky top-0 z-50">
+                    <div className="container mx-auto px-4">
+                        {/* Top contact bar */}
+                        <div className="flex justify-between items-center py-2 text-sm border-b">
+                            <div className="flex space-x-4 text-gray-600">
+                                <span><i className="fas fa-phone mr-1"></i>+1 (555) 123-4567</span>
+                                <span><i className="fas fa-envelope mr-1"></i>support@electroshop.com</span>
+                            </div>
+                            <div className="flex space-x-4">
+                                {/* User authentication buttons */}
+                                {!user && (
+                                    <>
+                                        <button 
+                                            onClick={() => setCurrentView('login')}
+                                            className="text-gray-600 hover:text-blue-600 transition-colors"
+                                        >
+                                            <i className="fas fa-sign-in-alt mr-1"></i>Login
+                                        </button>
+                                        <button 
+                                            onClick={() => setCurrentView('signup')}
+                                            className="text-gray-600 hover:text-blue-600 transition-colors"
+                                        >
+                                            <i className="fas fa-user-plus mr-1"></i>Sign Up
+                                        </button>
+                                    </>
+                                )}
+                                {user && (
+                                    <span className="text-gray-600">
+                                        <i className="fas fa-user mr-1"></i>Welcome, {user.name}
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+
+                        {/* Main navigation bar */}
+                        <div className="flex justify-between items-center py-4">
+                            <div className="flex items-center">
+                                {/* Logo and brand */}
+                                <h1 className="text-3xl font-bold text-blue-600 cursor-pointer mr-8" onClick={() => setCurrentView('home')}>
+                                    <i className="fas fa-bolt mr-2"></i>ElectroShop
+                                </h1>
+                                
+                                {/* Navigation menu */}
+                                <div className="hidden md:flex space-x-6">
+                                    <button 
+                                        onClick={() => setCurrentView('home')}
+                                        className={`font-medium transition-colors ${currentView === 'home' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}
+                                    >
+                                        Home
+                                    </button>
+                                    
+                                    {/* Categories dropdown */}
+                                    <div className="relative dropdown">
+                                        <button className="font-medium text-gray-700 hover:text-blue-600 flex items-center transition-colors">
+                                            Categories <i className="fas fa-chevron-down ml-1 text-xs"></i>
+                                        </button>
+                                        <div className="absolute top-full left-0 bg-white shadow-lg rounded-lg py-2 w-48 dropdown-menu">
+                                            {categories.map(category => (
+                                                <button
+                                                    key={category.name}
+                                                    onClick={() => {
+                                                        setSelectedCategory(category.name);
+                                                        setCurrentView('home');
+                                                    }}
+                                                    className="block w-full text-left px-4 py-2 hover:bg-gray-50 text-gray-700 transition-colors"
+                                                >
+                                                    <span className="mr-2">{category.icon}</span>
+                                                    {category.name}
+                                                    <span className="float-right text-xs text-gray-500">({category.count})</span>
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    
+                                    {/* User-specific navigation */}
+                                    {user && (
+                                        <button 
+                                            onClick={() => setCurrentView('track-orders')}
+                                            className={`font-medium transition-colors ${currentView === 'track-orders' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}
+                                        >
+                                            Track Orders
+                                        </button>
+                                    )}
+                                    
+                                    {/* Admin navigation */}
+                                    {isAdmin && (
+                                        <button 
+                                            onClick={() => setCurrentView('admin-dashboard')}
+                                            className={`font-medium transition-colors ${currentView === 'admin-dashboard' ? 'text-blue-600' : 'text-gray-700 hover:text-blue-600'}`}
+                                        >
+                                            Admin
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Right side navigation elements */}
+                            <div className="flex items-center space-x-4">
+                                {/* Search bar */}
+                                <div className="hidden md:block relative">
+                                    <input 
+                                        type="text" 
+                                        placeholder="Search products..."
+                                        className="w-64 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 form-input"
+                                    />
+                                    <i className="fas fa-search absolute right-3 top-3 text-gray-400"></i>
+                                </div>
+
+                                {/* Shopping cart button */}
+                                <button 
+                                    onClick={() => setCurrentView('cart')}
+                                    className="relative p-2 text-gray-700 hover:text-blue-600 transition-colors"
+                                >
+                                    <i className="fas fa-shopping-cart text-xl"></i>
+                                    {getCartCount() > 0 && (
+                                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                            {getCartCount()}
+                                        </span>
+                                    )}
+                                </button>
+
+                                {/* User account actions */}
+                                {user && (
+                                    <button 
+                                        onClick={() => {
+                                            setUser(null);
+                                            setIsAdmin(false);
+                                            setCurrentView('home');
+                                        }}
+                                        className="text-gray-700 hover:text-red-600 transition-colors"
+                                    >
+                                        <i className="fas fa-sign-out-alt"></i>
+                                    </button>
+                                )}
+                                {!user && (
+                                    <button 
+                                        onClick={() => setCurrentView('admin-login')}
+                                        className="bg-gray-100 text-gray-700 px-3 py-2 rounded hover:bg-gray-200 transition-colors"
+                                    >
+                                        Admin
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            );
+
+            /* ===========================================
+               PRODUCT CARD COMPONENT
+               =========================================== */
+            
+            const ProductCard = ({ product }) => (
+                <div className="bg-white rounded-xl shadow-md overflow-hidden card-hover cursor-pointer">
+                    <div className="relative">
+                        {/* Product image placeholder */}
+                        <div className="h-48 bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center text-6xl">
+                            {product.image}
+                        </div>
+                        
+                        {/* Product badges */}
+                        {product.badge && (
+                            <span className={`absolute top-3 left-3 px-2 py-1 text-xs font-bold rounded-full text-white ${
+                                product.badge === 'New' ? 'badge-new' :
+                                product.badge === 'Sale' ? 'badge-sale' :
+                                product.badge === 'Popular' ? 'badge-popular' :
+                                product.badge === 'Best Seller' ? 'badge-bestseller' :
+                                'bg-gray-500'
+                            }`}>
+                                {product.badge}
+                            </span>
+                        )}
+                        
+                        {/* Out of stock overlay */}
+                        {!product.inStock && (
+                            <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                                <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                                    Out of Stock
+                                </span>
+                            </div>
+                        )}
+                    </div>
+                    
+                    {/* Product information */}
+                    <div className="p-4">
+                        {/* Rating display */}
+                        <div className="flex items-center mb-2">
+                            <div className="flex text-yellow-400 text-sm">
+                                {[...Array(5)].map((_, i) => (
+                                    <i key={i} className={`fas fa-star ${i < Math.floor(product.rating) ? '' : 'text-gray-300'}`}></i>
+                                ))}
+                            </div>
+                            <span className="text-gray-600 text-sm ml-2">({product.reviews})</span>
+                        </div>
+                        
+                        {/* Product name */}
+                        <h3 
+                            className="font-semibold text-lg mb-2 hover:text-blue-600 cursor-pointer transition-colors"
+                            onClick={() => {
+                                setSelectedProduct(product);
+                                setCurrentView('product-detail');
+                            }}
+                        >
+                            {product.name}
+                        </h3>
+                        
+                        {/* Product description */}
+                        <p className="text-gray-600 text-sm mb-3 line-clamp-2">{product.description}</p>
+                        
+                        {/* Pricing information */}
+                        <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-center space-x-2">
+                                <span className="text-2xl font-bold text-blue-600">${product.price}</span>
+                                {product.originalPrice && product.originalPrice > product.price && (
+                                    <span className="text-gray-400 line-through text-sm">${product.originalPrice}</span>
+                                )}
+                            </div>
+                            {product.originalPrice && product.originalPrice > product.price && (
+                                <span className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full font-medium">
+                                    Save ${product.originalPrice - product.price}
+                                </span>
+                            )}
+                        </div>
+                        
+                        {/* Add to cart button */}
+                        <button 
+                            onClick={() => product.inStock && addToCart(product)}
+                            disabled={!product.inStock}
+                            className={`w-full py-2 px-4 rounded-lg font-medium transition-all ${
+                                product.inStock 
+                                    ? 'btn-primary text-white hover:shadow-lg' 
+                                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                            }`}
+                        >
+                            {product.inStock ? (
+                                <>
+                                    <i className="fas fa-cart-plus mr-2"></i>Add to Cart
+                                </>
+                            ) : (
+                                'Out of Stock'
+                            )}
+                        </button>
+                    </div>
+                </div>
+            );
+
+            /* ===========================================
+               HOME PAGE COMPONENT
+               =========================================== */
+            
+            const HomePage = () => (
+                <div>
+                    {/* Hero Section */}
+                    <section className="hero-gradient text-white py-16">
+                        <div className="container mx-auto px-4 text-center">
+                            <h1 className="text-5xl font-bold mb-4">Premium Electronics Store</h1>
+                            <p className="text-xl mb-8 opacity-90">Discover the latest technology with unbeatable prices</p>
+                            <div className="flex justify-center space-x-4">
+                                <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors">
+                                    Shop Now
+                                </button>
+                                <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-bold hover:bg-white hover:text-blue-600 transition-colors">
+                                    View Deals
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Categories Section */}
+                    <section className="py-12 bg-gray-50">
+                        <div className="container mx-auto px-4">
+                            <h2 className="text-3xl font-bold text-center mb-8">Shop by Category</h2>
+                            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
+                                {categories.map(category => (
+                                    <button
+                                        key={category.name}
+                                        onClick={() => {
+                                            setSelectedCategory(category.name);
+                                            document.getElementById('products-section').scrollIntoView({ behavior: 'smooth' });
+                                        }}
+                                        className="category-card p-6 rounded-xl text-center hover:shadow-lg"
+                                    >
+                                        <div className="text-4xl mb-3">{category.icon}</div>
+                                        <h3 className="font-semibold text-sm">{category.name}</h3>
+                                        <p className="text-xs text-gray-600 mt-1">{category.count} items</p>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Products Section */}
+                    <section id="products-section" className="py-12">
+                        <div className="container mx-auto px-4">
+                            {/* Section header with filters */}
+                            <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+                                <div>
+                                    <h2 className="text-3xl font-bold mb-2">
+                                        {selectedCategory === 'All' ? 'All Products' : selectedCategory}
+                                    </h2>
+                                    <p className="text-gray-600">{filteredProducts.length} products found</p>
+                                </div>
+                                
+                                {/* Filter and sort controls */}
+                                <div className="flex space-x-4 mt-4 md:mt-0">
+                                    <select 
+                                        value={selectedCategory}
+                                        onChange={(e) => setSelectedCategory(e.target.value)}
+                                        className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 form-input"
+                                    >
+                                        <option value="All">All Categories</option>
+                                        {categories.map(category => (
+                                            <option key={category.name} value={category.name}>{category.name}</option>
+                                        ))}
+                                    </select>
+                                    <select 
+                                        value={sortBy}
+                                        onChange={(e) => setSortBy(e.target.value)}
+                                        className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 form-input"
+                                    >
+                                        <option value="name">Sort by Name</option>
+                                        <option value="price-low">Price: Low to High</option>
+                                        <option value="price-high">Price: High to Low</option>
+                                        <option value="rating">Highest Rated</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            {/* Products grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                                {filteredProducts.map(product => (
+                                    <ProductCard key={product.id} product={product} />
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Features Section */}
+                    <section className="py-12 bg-gray-50">
+                        <div className="container mx-auto px-4">
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                {/* Free shipping feature */}
+                                <div className="text-center">
+                                    <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <i className="fas fa-shipping-fast text-2xl text-blue-600"></i>
+                                    </div>
+                                    <h3 className="font-bold text-lg mb-2">Free Shipping</h3>
+                                    <p className="text-gray-600">Free shipping on orders over $50</p>
+                                </div>
+                                
+                                {/* Secure payment feature */}
+                                <div className="text-center">
+                                    <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <i className="fas fa-shield-alt text-2xl text-green-600"></i>
+                                    </div>
+                                    <h3 className="font-bold text-lg mb-2">Secure Payment</h3>
+                                    <p className="text-gray-600">100% secure payment processing</p>
+                                </div>
+                                
+                                {/* Customer support feature */}
+                                <div className="text-center">
+                                    <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <i className="fas fa-headset text-2xl text-purple-600"></i>
+                                    </div>
+                                    <h3 className="font-bold text-lg mb-2">24/7 Support</h3>
+                                    <p className="text-gray-600">Round-the-clock customer support</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            );
+
+            /* ===========================================
+               PRODUCT DETAIL PAGE COMPONENT
+               =========================================== */
+            
+            const ProductDetailPage = () => {
+                if (!selectedProduct) return null;
+
+                return (
+                    <div className="container mx-auto px-4 py-8">
+                        {/* Breadcrumb navigation */}
+                        <nav className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
+                            <button onClick={() => setCurrentView('home')} className="hover:text-blue-600 transition-colors">Home</button>
+                            <i className="fas fa-chevron-right text-xs"></i>
+                            <span>{selectedProduct.category}</span>
+                            <i className="fas fa-chevron-right text-xs"></i>
+                            <span className="text-gray-900">{selectedProduct.name}</span>
+                        </nav>
+                        
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                            {/* Product Images Section */}
+                            <div>
+                                {/* Main product image */}
+                                <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-12 mb-4">
+                                    <div className="text-center text-9xl">{selectedProduct.image}</div>
+                                </div>
+                                
+                                {/* Thumbnail images */}
+                                <div className="grid grid-cols-4 gap-2">
+                                    {[1,2,3,4].map(i => (
+                                        <div key={i} className="bg-gray-100 rounded-lg p-4 text-center text-2xl cursor-pointer hover:bg-gray-200 transition-colors">
+                                            {selectedProduct.image}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Product Information Section */}
+                            <div>
+                                {/* Category and badge display */}
+                                <div className="flex items-center mb-4">
+                                    <span className={`px-3 py-1 text-sm font-medium rounded-full ${categories.find(c => c.name === selectedProduct.category)?.color || 'bg-gray-100 text-gray-800'}`}>
+                                        {selectedProduct.category}
+                                    </span>
+                                    {selectedProduct.badge && (
+                                        <span className={`ml-2 px-3 py-1 text-sm font-bold rounded-full text-white ${
+                                            selectedProduct.badge === 'New' ? 'badge-new' :
+                                            selectedProduct.badge === 'Sale' ? 'badge-sale' :
+                                            selectedProduct.badge === 'Popular' ? 'badge-popular' :
+                                            'badge-bestseller'
+                                        }`}>
+                                            {selectedProduct.badge}
+                                        </span>
+                                    )}
+                                </div>
+
+                                {/* Product title */}
+                                <h1 className="text-3xl font-bold mb-4">{selectedProduct.name}</h1>
+                                
+                                {/* Rating and reviews */}
+                                <div className="flex items-center mb-4">
+                                    <div className="flex text-yellow-400 mr-2">
+                                        {[...Array(5)].map((_, i) => (
+                                            <i key={i} className={`fas fa-star ${i < Math.floor(selectedProduct.rating) ? '' : 'text-gray-300'}`}></i>
+                                        ))}
+                                    </div>
+                                    <span className="text-gray-600">({selectedProduct.reviews} reviews)</span>
+                                </div>
+
+                                {/* Product description */}
+                                <p className="text-gray-700 text-lg mb-6">{selectedProduct.description}</p>
+
+                                {/* Pricing section */}
+                                <div className="flex items-center space-x-4 mb-6">
+                                    <span className="text-4xl font-bold text-blue-600">${selectedProduct.price}</span>
+                                    {selectedProduct.originalPrice && selectedProduct.originalPrice > selectedProduct.price && (
+                                        <>
+                                            <span className="text-2xl text-gray-400 line-through">${selectedProduct.originalPrice}</span>
+                                            <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full font-bold">
+                                                Save ${selectedProduct.originalPrice - selectedProduct.price}
+                                            </span>
+                                        </>
+                                    )}
+                                </div>
+
+                                {/* Key features list */}
+                                <div className="mb-6">
+                                    <h3 className="font-bold mb-3">Key Features:</h3>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {selectedProduct.features.map((feature, index) => (
+                                            <div key={index} className="flex items-center text-gray-700">
+                                                <i className="fas fa-check text-green-500 mr-2"></i>
+                                                {feature}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* Action buttons */}
+                                <div className="flex space-x-4 mb-8">
+                                    <button 
+                                        onClick={() => selectedProduct.inStock && addToCart(selectedProduct)}
+                                        disabled={!selectedProduct.inStock}
+                                        className={`flex-1 py-3 px-6 rounded-lg font-bold text-lg transition-all ${
+                                            selectedProduct.inStock 
+                                                ? 'btn-primary text-white hover:shadow-lg' 
+                                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                                        }`}
+                                    >
+                                        {selectedProduct.inStock ? (
+                                            <>
+                                                <i className="fas fa-cart-plus mr-2"></i>Add to Cart
+                                            </>
+                                        ) : (
+                                            'Out of Stock'
+                                        )}
+                                    </button>
+                                    <button className="px-6 py-3 border-2 border-gray-300 rounded-lg hover:border-gray-400 transition-colors">
+                                        <i className="fas fa-heart"></i>
+                                    </button>
+                                </div>
+
+                                {/* Service features */}
+                                <div className="grid grid-cols-3 gap-4 text-center">
+                                    <div className="p-4 bg-gray-50 rounded-lg">
+                                        <i className="fas fa-shipping-fast text-2xl text-green-600 mb-2"></i>
+                                        <p className="text-sm font-medium">Free Shipping</p>
+                                        <p className="text-xs text-gray-600">On orders over $50</p>
+                                    </div>
+                                    <div className="p-4 bg-gray-50 rounded-lg">
+                                        <i className="fas fa-undo text-2xl text-blue-600 mb-2"></i>
+                                        <p className="text-sm font-medium">30-Day Returns</p>
+                                        <p className="text-xs text-gray-600">Easy returns policy</p>
+                                    </div>
+                                    <div className="p-4 bg-gray-50 rounded-lg">
+                                        <i className="fas fa-shield-alt text-2xl text-purple-600 mb-2"></i>
+                                        <p className="text-sm font-medium">Warranty</p>
+                                        <p className="text-xs text-gray-600">1-year coverage</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            /* ===========================================
+               SHOPPING CART PAGE COMPONENT
+               =========================================== */
+            
+            const CartPage = () => (
+                <div className="container mx-auto px-4 py-8">
+                    <h2 className="text-3xl font-bold mb-8">Shopping Cart</h2>
+                    
+                    {cart.length === 0 ? (
+                        // Empty cart state
+                        <div className="text-center py-16">
+                            <div className="text-6xl mb-4">🛒</div>
+                            <h3 className="text-2xl font-bold mb-4">Your cart is empty</h3>
+                            <p className="text-gray-600 mb-8">Looks like you haven't added anything to your cart yet.</p>
+                            <button 
+                                onClick={() => setCurrentView('home')}
+                                className="btn-primary text-white px-8 py-3 rounded-lg hover:shadow-lg transition-all"
+                            >
+                                Continue Shopping
+                            </button>
+                        </div>
+                    ) : (
+                        // Cart with items
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            {/* Cart Items List */}
+                            <div className="lg:col-span-2">
+                                <div className="bg-white rounded-lg shadow-md">
+                                    {cart.map(item => (
+                                        <div key={item.id} className="flex items-center p-6 border-b last:border-b-0">
+                                            {/* Item image */}
+                                            <div className="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center text-3xl mr-4">
+                                                {item.image}
+                                            </div>
+                                            
+                                            {/* Item details */}
+                                            <div className="flex-1">
+                                                <h3 className="font-semibold text-lg">{item.name}</h3>
+                                                <p className="text-gray-600">{item.category}</p>
+                                                <p className="text-blue-600 font-bold text-xl">${item.price}</p>
+                                            </div>
+                                            
+                                            {/* Quantity controls */}
+                                            <div className="flex items-center space-x-3">
+                                                <button 
+                                                    onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                                    className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors"
+                                                >
+                                                    -
+                                                </button>
+                                                <span className="w-8 text-center font-medium">{item.quantity}</span>
+                                                <button 
+                                                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                                    className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center hover:bg-gray-300 transition-colors"
+                                                >
+                                                    +
+                                                </button>
+                                                <button 
+                                                    onClick={() => updateQuantity(item.id, 0)}
+                                                    className="ml-4 text-red-500 hover:text-red-700 transition-colors"
+                                                >
+                                                    <i className="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Order Summary Sidebar */}
+                            <div>
+                                <div className="bg-white rounded-lg shadow-md p-6 sticky top-24">
+                                    <h3 className="text-xl font-bold mb-4">Order Summary</h3>
+                                    
+                                    {/* Price breakdown */}
+                                    <div className="space-y-3 mb-4">
+                                        <div className="flex justify-between">
+                                            <span>Subtotal ({getCartCount()} items)</span>
+                                            <span>${getCartTotal()}</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span>Shipping</span>
+                                            <span className="text-green-600">Free</span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <span>Tax</span>
+                                            <span>${(getCartTotal() * 0.08).toFixed(2)}</span>
+                                        </div>
+                                        <hr />
+                                        <div className="flex justify-between text-xl font-bold">
+                                            <span>Total</span>
+                                            <span>${(getCartTotal() * 1.08).toFixed(2)}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Action buttons */}
+                                    <button 
+                                        onClick={() => setCurrentView('checkout')}
+                                        className="w-full btn-primary text-white py-3 px-4 rounded-lg hover:shadow-lg transition-all font-bold"
+                                    >
+                                        Proceed to Checkout
+                                    </button>
+                                    <button 
+                                        onClick={() => setCurrentView('home')}
+                                        className="w-full mt-3 border border-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-50 transition-colors"
+                                    >
+                                        Continue Shopping
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+
+            /* ===========================================
+               USER AUTHENTICATION PAGES
+               =========================================== */
+            
+            // Login Page Component
+            const LoginPage = () => {
+                const [email, setEmail] = useState('');
+                const [password, setPassword] = useState('');
+
+                const handleLogin = (e) => {
+                    e.preventDefault();
+                    if (email && password) {
+                        setUser({ email, name: email.split('@')[0] });
+                        setCurrentView('home');
+                        alert('Login successful!');
+                    }
+                };
+
+                return (
+                    <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4">
+                        <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
+                            <h2 className="text-2xl font-bold text-center mb-6">Welcome Back</h2>
+                            <form onSubmit={handleLogin}>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                        Email Address
+                                    </label>
+                                    <input 
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                        required
+                                    />
+                                </div>
+                                <div className="mb-6">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                        Password
+                                    </label>
+                                    <input 
+                                        type="password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                        required
+                                    />
+                                </div>
+                                <button 
+                                    type="submit"
+                                    className="w-full btn-primary text-white py-2 px-4 rounded hover:shadow-lg transition-all"
+                                >
+                                    Sign In
+                                </button>
+                            </form>
+                            <div className="mt-4 text-center">
+                                <p className="text-gray-600 text-sm">
+                                    Demo: Use any email and password to login
+                                </p>
+                                <p className="text-gray-600 text-sm mt-2">
+                                    Don't have an account?{' '}
+                                    <button 
+                                        onClick={() => setCurrentView('signup')}
+                                        className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
+                                    >
+                                        Create an account
+                                    </button>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            // Sign Up Page Component
+            const SignUpPage = () => {
+                const [formData, setFormData] = useState({
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    password: '',
+                    confirmPassword: '',
+                    phone: '',
+                    agreeToTerms: false
+                });
+
+                const handleSignUp = (e) => {
+                    e.preventDefault();
+                    
+                    // Form validation
+                    if (formData.password !== formData.confirmPassword) {
+                        alert('Passwords do not match!');
+                        return;
+                    }
+                    
+                    if (!formData.agreeToTerms) {
+                        alert('Please agree to the terms and conditions');
+                        return;
+                    }
+
+                    if (formData.email && formData.password && formData.firstName && formData.lastName) {
+                        setUser({ 
+                            email: formData.email, 
+                            name: formData.firstName + ' ' + formData.lastName,
+                            firstName: formData.firstName,
+                            lastName: formData.lastName,
+                            phone: formData.phone
+                        });
+                        setCurrentView('home');
+                        alert('Account created successfully! Welcome to ElectroShop!');
+                    }
+                };
+
+                return (
+                    <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4">
+                        <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
+                            <h2 className="text-2xl font-bold text-center mb-6">Create Account</h2>
+                            <form onSubmit={handleSignUp}>
+                                {/* Name fields */}
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                    <div>
+                                        <label className="block text-gray-700 text-sm font-bold mb-2">
+                                            First Name
+                                        </label>
+                                        <input 
+                                            type="text"
+                                            value={formData.firstName}
+                                            onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-gray-700 text-sm font-bold mb-2">
+                                            Last Name
+                                        </label>
+                                        <input 
+                                            type="text"
+                                            value={formData.lastName}
+                                            onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                                            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                                
+                                {/* Contact information */}
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                        Email Address
+                                    </label>
+                                    <input 
+                                        type="email"
+                                        value={formData.email}
+                                        onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                        required
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                        Phone Number (Optional)
+                                    </label>
+                                    <input 
+                                        type="tel"
+                                        value={formData.phone}
+                                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                        placeholder="(555) 123-4567"
+                                    />
+                                </div>
+                                
+                                {/* Password fields */}
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                        Password
+                                    </label>
+                                    <input 
+                                        type="password"
+                                        value={formData.password}
+                                        onChange={(e) => setFormData({...formData, password: e.target.value})}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                        required
+                                        minLength="6"
+                                    />
+                                    <p className="text-gray-500 text-xs mt-1">Password must be at least 6 characters</p>
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                        Confirm Password
+                                    </label>
+                                    <input 
+                                        type="password"
+                                        value={formData.confirmPassword}
+                                        onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                        required
+                                        minLength="6"
+                                    />
+                                </div>
+                                
+                                {/* Terms agreement */}
+                                <div className="mb-6">
+                                    <label className="flex items-center">
+                                        <input 
+                                            type="checkbox"
+                                            checked={formData.agreeToTerms}
+                                            onChange={(e) => setFormData({...formData, agreeToTerms: e.target.checked})}
+                                            className="mr-2"
+                                            required
+                                        />
+                                        <span className="text-sm text-gray-700">
+                                            I agree to the{' '}
+                                            <a href="#" className="text-blue-600 hover:text-blue-800 transition-colors">Terms and Conditions</a>
+                                            {' '}and{' '}
+                                            <a href="#" className="text-blue-600 hover:text-blue-800 transition-colors">Privacy Policy</a>
+                                        </span>
+                                    </label>
+                                </div>
+                                
+                                <button 
+                                    type="submit"
+                                    className="w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition-colors"
+                                >
+                                    <i className="fas fa-user-plus mr-2"></i>Create Account
+                                </button>
+                            </form>
+                            <div className="mt-4 text-center">
+                                <p className="text-gray-600 text-sm">
+                                    Already have an account?{' '}
+                                    <button 
+                                        onClick={() => setCurrentView('login')}
+                                        className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
+                                    >
+                                        Login here
+                                    </button>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            /* ===========================================
+               ADMIN AUTHENTICATION AND DASHBOARD
+               =========================================== */
+            
+            // Admin Login Page Component
+            const AdminLoginPage = () => {
+                const [email, setEmail] = useState('');
+                const [password, setPassword] = useState('');
+
+                const handleAdminLogin = (e) => {
+                    e.preventDefault();
+                    // Demo admin credentials
+                    if (email === 'admin@electroshop.com' && password === 'admin123') {
+                        setUser({ email, name: 'Admin' });
+                        setIsAdmin(true);
+                        setCurrentView('admin-dashboard');
+                        alert('Admin login successful!');
+                    } else {
+                        alert('Invalid admin credentials. Use admin@electroshop.com / admin123');
+                    }
+                };
+
+                return (
+                    <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4">
+                        <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
+                            <h2 className="text-2xl font-bold text-center mb-6">Admin Login</h2>
+                            <form onSubmit={handleAdminLogin}>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                        Admin Email
+                                    </label>
+                                    <input 
+                                        type="email"
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                        required
+                                    />
+                                </div>
+                                <div className="mb-6">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                        Admin Password
+                                    </label>
+                                    <input 
+                                        type="password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
+                                        className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                        required
+                                    />
+                                </div>
+                                <button 
+                                    type="submit"
+                                    className="w-full bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition-colors"
+                                >
+                                    Admin Login
+                                </button>
+                            </form>
+                            <div className="mt-4 p-3 bg-yellow-100 rounded text-sm">
+                                <p><strong>Demo Credentials:</strong></p>
+                                <p>Email: admin@electroshop.com</p>
+                                <p>Password: admin123</p>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            /* ===========================================
+               PRODUCT FORM COMPONENT (ADMIN)
+               =========================================== */
+            
+            const ProductForm = ({ product, onSubmit, onCancel }) => {
+                const [formData, setFormData] = useState({
+                    name: product?.name || '',
+                    price: product?.price || '',
+                    originalPrice: product?.originalPrice || '',
+                    category: product?.category || '',
+                    image: product?.image || '📱',
+                    description: product?.description || '',
+                    badge: product?.badge || ''
+                });
+
+                const handleSubmit = (e) => {
+                    e.preventDefault();
+                    onSubmit({
+                        ...formData,
+                        price: parseFloat(formData.price),
+                        originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : null,
+                        id: product?.id
+                    });
+                };
+
+                return (
+                    <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
+                        <h3 className="text-xl font-bold mb-4">
+                            {product ? 'Edit Product' : 'Add New Product'}
+                        </h3>
+                        
+                        {/* Product form fields */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-gray-700 text-sm font-bold mb-2">
+                                    Product Name
+                                </label>
+                                <input 
+                                    type="text"
+                                    value={formData.name}
+                                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-gray-700 text-sm font-bold mb-2">
+                                    Price ($)
+                                </label>
+                                <input 
+                                    type="number"
+                                    value={formData.price}
+                                    onChange={(e) => setFormData({...formData, price: e.target.value})}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-gray-700 text-sm font-bold mb-2">
+                                    Original Price ($) - Optional
+                                </label>
+                                <input 
+                                    type="number"
+                                    value={formData.originalPrice}
+                                    onChange={(e) => setFormData({...formData, originalPrice: e.target.value})}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-gray-700 text-sm font-bold mb-2">
+                                    Category
+                                </label>
+                                <select 
+                                    value={formData.category}
+                                    onChange={(e) => setFormData({...formData, category: e.target.value})}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                    required
+                                >
+                                    <option value="">Select Category</option>
+                                    {categories.map(category => (
+                                        <option key={category.name} value={category.name}>{category.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-gray-700 text-sm font-bold mb-2">
+                                    Emoji Icon
+                                </label>
+                                <input 
+                                    type="text"
+                                    value={formData.image}
+                                    onChange={(e) => setFormData({...formData, image: e.target.value})}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                    placeholder="📱"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-gray-700 text-sm font-bold mb-2">
+                                    Badge (Optional)
+                                </label>
+                                <select 
+                                    value={formData.badge}
+                                    onChange={(e) => setFormData({...formData, badge: e.target.value})}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                >
+                                    <option value="">No Badge</option>
+                                    <option value="New">New</option>
+                                    <option value="Sale">Sale</option>
+                                    <option value="Popular">Popular</option>
+                                    <option value="Best Seller">Best Seller</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        {/* Description field */}
+                        <div className="mt-4">
+                            <label className="block text-gray-700 text-sm font-bold mb-2">
+                                Description
+                            </label>
+                            <textarea 
+                                value={formData.description}
+                                onChange={(e) => setFormData({...formData, description: e.target.value})}
+                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                rows="3"
+                                required
+                            />
+                        </div>
+                        
+                        {/* Form action buttons */}
+                        <div className="flex space-x-4 mt-6">
+                            <button 
+                                type="submit"
+                                className="btn-primary text-white py-2 px-4 rounded hover:shadow-lg transition-all"
+                            >
+                                {product ? 'Update Product' : 'Add Product'}
+                            </button>
+                            <button 
+                                type="button"
+                                onClick={onCancel}
+                                className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 transition-colors"
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                );
+            };
+
+            /* ===========================================
+               ADMIN DASHBOARD COMPONENT
+               =========================================== */
+            
+            const AdminDashboard = () => {
+                const [activeTab, setActiveTab] = useState('products');
+                const [showAddForm, setShowAddForm] = useState(false);
+
+                return (
+                    <div className="container mx-auto px-4 py-8">
+                        <h2 className="text-3xl font-bold mb-6">Admin Dashboard</h2>
+                        
+                        {/* Tab navigation */}
+                        <div className="flex space-x-4 mb-6">
+                            <button 
+                                onClick={() => setActiveTab('products')}
+                                className={`px-6 py-3 rounded-lg font-medium transition-colors ${activeTab === 'products' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+                            >
+                                Manage Products
+                            </button>
+                            <button 
+                                onClick={() => setActiveTab('orders')}
+                                className={`px-6 py-3 rounded-lg font-medium transition-colors ${activeTab === 'orders' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}
+                            >
+                                View Orders
+                            </button>
+                        </div>
+
+                        {/* Products Management Tab */}
+                        {activeTab === 'products' && (
+                            <div>
+                                <div className="flex justify-between items-center mb-6">
+                                    <h3 className="text-xl font-bold">Product Management</h3>
+                                    <button 
+                                        onClick={() => setShowAddForm(true)}
+                                        className="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors"
+                                    >
+                                        <i className="fas fa-plus mr-2"></i>Add Product
+                                    </button>
+                                </div>
+
+                                {/* Product form (when adding/editing) */}
+                                {(showAddForm || editingProduct) && (
+                                    <div className="mb-6">
+                                        <ProductForm 
+                                            product={editingProduct}
+                                            onSubmit={(productData) => {
+                                                if (editingProduct) {
+                                                    updateProduct(productData);
+                                                } else {
+                                                    addProduct(productData);
+                                                }
+                                                setShowAddForm(false);
+                                                setEditingProduct(null);
+                                            }}
+                                            onCancel={() => {
+                                                setShowAddForm(false);
+                                                setEditingProduct(null);
+                                            }}
+                                        />
+                                    </div>
+                                )}
+
+                                {/* Products table */}
+                                <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                                    <table className="w-full">
+                                        <thead className="bg-gray-50">
+                                            <tr>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="bg-white divide-y divide-gray-200">
+                                            {products.map(product => (
+                                                <tr key={product.id}>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <div className="flex items-center">
+                                                            <span className="text-2xl mr-3">{product.image}</span>
+                                                            <div>
+                                                                <div className="text-sm font-medium text-gray-900">{product.name}</div>
+                                                                <div className="text-sm text-gray-500">{product.description}</div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <span className={`px-2 py-1 text-xs font-medium rounded-full ${categories.find(c => c.name === product.category)?.color || 'bg-gray-100 text-gray-800'}`}>
+                                                            {product.category}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                        <div>
+                                                            <span className="font-bold">${product.price}</span>
+                                                            {product.originalPrice && (
+                                                                <span className="text-gray-400 line-through ml-2">${product.originalPrice}</span>
+                                                            )}
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
+                                                            product.inStock ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                                        }`}>
+                                                            {product.inStock ? 'In Stock' : 'Out of Stock'}
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                        <button 
+                                                            onClick={() => setEditingProduct(product)}
+                                                            className="text-blue-600 hover:text-blue-900 mr-3 transition-colors"
+                                                        >
+                                                            Edit
+                                                        </button>
+                                                        <button 
+                                                            onClick={() => deleteProduct(product.id)}
+                                                            className="text-red-600 hover:text-red-900 transition-colors"
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Orders Management Tab */}
+                        {activeTab === 'orders' && (
+                            <div>
+                                <h3 className="text-xl font-bold mb-6">Customer Orders</h3>
+                                <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                                    <table className="w-full">
+                                        <thead className="bg-gray-50">
+                                            <tr>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Items</th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="bg-white divide-y divide-gray-200">
+                                            {orders.map(order => (
+                                                <tr key={order.id}>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">#{order.id}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.customer}</td>
+                                                    <td className="px-6 py-4 text-sm text-gray-900">
+                                                        {order.items.map(item => (
+                                                            <div key={item.name}>{item.name} x{item.quantity}</div>
+                                                        ))}
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">${order.total}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.date}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <select 
+                                                            value={order.status}
+                                                            onChange={(e) => updateOrderStatus(order.id, e.target.value)}
+                                                            className={`px-3 py-1 text-xs font-semibold rounded-full border transition-colors ${
+                                                                order.status === 'Delivered' ? 'bg-green-100 text-green-800 border-green-300' :
+                                                                order.status === 'Shipped' ? 'bg-blue-100 text-blue-800 border-blue-300' :
+                                                                order.status === 'Packed' ? 'bg-purple-100 text-purple-800 border-purple-300' :
+                                                                order.status === 'Processing' ? 'bg-yellow-100 text-yellow-800 border-yellow-300' :
+                                                                'bg-gray-100 text-gray-800 border-gray-300'
+                                                            }`}
+                                                        >
+                                                            <option value="Order Placed">Order Placed</option>
+                                                            <option value="Processing">Processing</option>
+                                                            <option value="Packed">Packed</option>
+                                                            <option value="Shipped">Shipped</option>
+                                                            <option value="Out for Delivery">Out for Delivery</option>
+                                                            <option value="Delivered">Delivered</option>
+                                                            <option value="Cancelled">Cancelled</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                );
+            };
+
+            /* ===========================================
+               CHECKOUT AND ORDER PAGES
+               =========================================== */
+            
+            // Checkout Page Component
+            const CheckoutPage = () => {
+                const [formData, setFormData] = useState({
+                    email: '',
+                    firstName: '',
+                    lastName: '',
+                    address: '',
+                    city: '',
+                    zipCode: '',
+                    cardNumber: '',
+                    expiryDate: '',
+                    cvv: ''
+                });
+
+                const handleSubmit = (e) => {
+                    e.preventDefault();
+                    // Create new order
+                    const newOrder = {
+                        id: orders.length + 1,
+                        customer: formData.email,
+                        items: cart,
+                        total: getCartTotal(),
+                        date: new Date().toISOString().split('T')[0],
+                        status: 'Processing'
+                    };
+                    setOrders([...orders, newOrder]);
+                    setCart([]);
+                    setCurrentView('thank-you');
+                };
+
+                // Redirect if cart is empty
+                if (cart.length === 0) {
+                    return (
+                        <div className="container mx-auto px-4 py-8 text-center">
+                            <h2 className="text-3xl font-bold mb-4">Your cart is empty</h2>
+                            <button 
+                                onClick={() => setCurrentView('home')}
+                                className="btn-primary text-white py-2 px-4 rounded hover:shadow-lg transition-all"
+                            >
+                                Continue Shopping
+                            </button>
+                        </div>
+                    );
+                }
+
+                return (
+                    <div className="container mx-auto px-4 py-8">
+                        <h2 className="text-3xl font-bold mb-8">Checkout</h2>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            {/* Order Summary */}
+                            <div>
+                                <h3 className="text-xl font-bold mb-4">Order Summary</h3>
+                                <div className="bg-white rounded-lg shadow-md p-6">
+                                    {cart.map(item => (
+                                        <div key={item.id} className="flex justify-between items-center mb-4 pb-4 border-b">
+                                            <div className="flex items-center">
+                                                <span className="text-2xl mr-3">{item.image}</span>
+                                                <div>
+                                                    <h4 className="font-medium">{item.name}</h4>
+                                                    <p className="text-gray-600">Quantity: {item.quantity}</p>
+                                                </div>
+                                            </div>
+                                            <p className="font-bold">${item.price * item.quantity}</p>
+                                        </div>
+                                    ))}
+                                    <div className="flex justify-between items-center text-xl font-bold pt-4 border-t">
+                                        <span>Total:</span>
+                                        <span>${getCartTotal()}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Checkout Form */}
+                            <div>
+                                <h3 className="text-xl font-bold mb-4">Payment & Shipping</h3>
+                                <div className="bg-white rounded-lg shadow-md p-6">
+                                    {/* Demo notice */}
+                                    <div className="mb-4 p-3 bg-yellow-100 rounded text-sm">
+                                        <strong>Demo Notice:</strong> This is a sample checkout form. No actual payment will be processed.
+                                    </div>
+                                    
+                                    <form onSubmit={handleSubmit}>
+                                        {/* Personal information */}
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                            <div>
+                                                <label className="block text-gray-700 text-sm font-bold mb-2">
+                                                    First Name
+                                                </label>
+                                                <input 
+                                                    type="text"
+                                                    value={formData.firstName}
+                                                    onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                                                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                                    required
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-gray-700 text-sm font-bold mb-2">
+                                                    Last Name
+                                                </label>
+                                                <input 
+                                                    type="text"
+                                                    value={formData.lastName}
+                                                    onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                                                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+                                        
+                                        {/* Contact and address */}
+                                        <div className="mb-4">
+                                            <label className="block text-gray-700 text-sm font-bold mb-2">
+                                                Email
+                                            </label>
+                                            <input 
+                                                type="email"
+                                                value={formData.email}
+                                                onChange={(e) => setFormData({...formData, email: e.target.value})}
+                                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                                required
+                                            />
+                                        </div>
+                                        <div className="mb-4">
+                                            <label className="block text-gray-700 text-sm font-bold mb-2">
+                                                Address
+                                            </label>
+                                            <input 
+                                                type="text"
+                                                value={formData.address}
+                                                onChange={(e) => setFormData({...formData, address: e.target.value})}
+                                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                                required
+                                            />
+                                        </div>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                                            <div>
+                                                <label className="block text-gray-700 text-sm font-bold mb-2">
+                                                    City
+                                                </label>
+                                                <input 
+                                                    type="text"
+                                                    value={formData.city}
+                                                    onChange={(e) => setFormData({...formData, city: e.target.value})}
+                                                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                                    required
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-gray-700 text-sm font-bold mb-2">
+                                                    ZIP Code
+                                                </label>
+                                                <input 
+                                                    type="text"
+                                                    value={formData.zipCode}
+                                                    onChange={(e) => setFormData({...formData, zipCode: e.target.value})}
+                                                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+                                        
+                                        <hr className="my-6" />
+                                        
+                                        {/* Payment information */}
+                                        <h4 className="font-bold mb-4">Payment Information</h4>
+                                        <div className="mb-4">
+                                            <label className="block text-gray-700 text-sm font-bold mb-2">
+                                                Card Number (Demo)
+                                            </label>
+                                            <input 
+                                                type="text"
+                                                value={formData.cardNumber}
+                                                onChange={(e) => setFormData({...formData, cardNumber: e.target.value})}
+                                                className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                                placeholder="1234 5678 9012 3456"
+                                                required
+                                            />
+                                        </div>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                                            <div>
+                                                <label className="block text-gray-700 text-sm font-bold mb-2">
+                                                    Expiry Date
+                                                </label>
+                                                <input 
+                                                    type="text"
+                                                    value={formData.expiryDate}
+                                                    onChange={(e) => setFormData({...formData, expiryDate: e.target.value})}
+                                                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                                    placeholder="MM/YY"
+                                                    required
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-gray-700 text-sm font-bold mb-2">
+                                                    CVV
+                                                </label>
+                                                <input 
+                                                    type="text"
+                                                    value={formData.cvv}
+                                                    onChange={(e) => setFormData({...formData, cvv: e.target.value})}
+                                                    className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                                    placeholder="123"
+                                                    required
+                                                />
+                                            </div>
+                                        </div>
+                                        
+                                        {/* Submit button */}
+                                        <button 
+                                            type="submit"
+                                            className="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors text-lg font-bold"
+                                        >
+                                            <i className="fas fa-lock mr-2"></i>Place Order - ${getCartTotal()}
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                );
+            };
+
+            // Thank You Page Component
+            const ThankYouPage = () => (
+                <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center py-12 px-4">
+                    <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 text-center">
+                        <div className="text-6xl mb-6">🎉</div>
+                        <h2 className="text-3xl font-bold text-green-600 mb-4">Thank You!</h2>
+                        <p className="text-gray-700 mb-6">
+                            Your order has been placed successfully! We appreciate your business and will process your order shortly.
+                        </p>
+                        <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                            <p className="text-green-800 font-medium">
+                                <i className="fas fa-check-circle mr-2"></i>
+                                Order confirmation will be sent to your email
+                            </p>
+                        </div>
+                        <div className="flex space-x-4">
+                            <button 
+                                onClick={() => setCurrentView('home')}
+                                className="flex-1 btn-primary text-white py-2 px-4 rounded hover:shadow-lg transition-all"
+                            >
+                                Continue Shopping
+                            </button>
+                            {user && (
+                                <button 
+                                    onClick={() => setCurrentView('track-orders')}
+                                    className="flex-1 bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition-colors"
+                                >
+                                    Track Orders
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+
+            // Order Tracking Page Component
+            const OrderTrackingPage = () => {
+                const userOrders = orders.filter(order => order.customer === user?.email);
+
+                return (
+                    <div className="container mx-auto px-4 py-8">
+                        <h2 className="text-3xl font-bold mb-8">Track Your Orders</h2>
+                        
+                        {userOrders.length === 0 ? (
+                            // No orders state
+                            <div className="text-center py-12">
+                                <div className="text-6xl mb-4">📦</div>
+                                <h3 className="text-xl font-bold mb-4">No orders found</h3>
+                                <p className="text-gray-600 mb-6">You haven't placed any orders yet.</p>
+                                <button 
+                                    onClick={() => setCurrentView('home')}
+                                    className="btn-primary text-white py-2 px-6 rounded hover:shadow-lg transition-all"
+                                >
+                                    Start Shopping
+                                </button>
+                            </div>
+                        ) : (
+                            // Orders list
+                            <div className="space-y-6">
+                                {userOrders.map(order => (
+                                    <div key={order.id} className="bg-white rounded-lg shadow-md p-6">
+                                        {/* Order header */}
+                                        <div className="flex justify-between items-start mb-4">
+                                            <div>
+                                                <h3 className="text-xl font-bold">Order #{order.id}</h3>
+                                                <p className="text-gray-600">Placed on {order.date}</p>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="text-2xl font-bold text-blue-600">${order.total}</p>
+                                                <span className={`px-3 py-1 text-sm font-semibold rounded-full ${
+                                                    order.status === 'Delivered' ? 'bg-green-100 text-green-800' :
+                                                    order.status === 'Shipped' || order.status === 'Out for Delivery' ? 'bg-blue-100 text-blue-800' :
+                                                    order.status === 'Packed' ? 'bg-purple-100 text-purple-800' :
+                                                    order.status === 'Processing' ? 'bg-yellow-100 text-yellow-800' :
+                                                    order.status === 'Cancelled' ? 'bg-red-100 text-red-800' :
+                                                    'bg-gray-100 text-gray-800'
+                                                }`}>
+                                                    {order.status}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        
+                                        {/* Order items */}
+                                        <div className="border-t pt-4">
+                                            <h4 className="font-medium mb-3">Items:</h4>
+                                            {order.items.map(item => (
+                                                <div key={item.name} className="flex justify-between items-center mb-2">
+                                                    <span>{item.name} x{item.quantity}</span>
+                                                    <span className="font-medium">${item.price * item.quantity}</span>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        {/* Order progress tracker */}
+                                        <div className="mt-6 pt-4 border-t">
+                                            <h4 className="font-medium mb-4">Order Progress:</h4>
+                                            <div className="flex items-center justify-between">
+                                                {['Order Placed', 'Processing', 'Packed', 'Shipped', 'Delivered'].map((status, index) => {
+                                                    const currentIndex = ['Order Placed', 'Processing', 'Packed', 'Shipped', 'Out for Delivery', 'Delivered'].indexOf(order.status);
+                                                    const isCompleted = index <= currentIndex;
+                                                    const isCurrent = index === currentIndex;
+                                                    
+                                                    return (
+                                                        <div key={status} className="flex flex-col items-center">
+                                                            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-colors ${
+                                                                isCompleted ? 'bg-green-500 text-white' :
+                                                                isCurrent ? 'bg-blue-500 text-white' :
+                                                                'bg-gray-300 text-gray-600'
+                                                            }`}>
+                                                                {isCompleted ? '✓' : index + 1}
+                                                            </div>
+                                                            <span className={`text-xs mt-2 text-center transition-colors ${
+                                                                isCompleted || isCurrent ? 'text-gray-900 font-medium' : 'text-gray-500'
+                                                            }`}>
+                                                                {status}
+                                                            </span>
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                );
+            };
+
+            /* ===========================================
+               MAIN RENDER FUNCTION
+               =========================================== */
+            
+            return (
+                <div className="min-h-screen bg-gray-50">
+                    {/* Navigation bar - always visible */}
+                    <Navbar />
+                    
+                    {/* Main content area - renders different pages based on currentView state */}
+                    {currentView === 'home' && <HomePage />}
+                    {currentView === 'product-detail' && <ProductDetailPage />}
+                    {currentView === 'cart' && <CartPage />}
+                    {currentView === 'login' && <LoginPage />}
+                    {currentView === 'signup' && <SignUpPage />}
+                    {currentView === 'admin-login' && <AdminLoginPage />}
+                    {currentView === 'admin-dashboard' && isAdmin && <AdminDashboard />}
+                    {currentView === 'checkout' && <CheckoutPage />}
+                    {currentView === 'thank-you' && <ThankYouPage />}
+                    {currentView === 'track-orders' && user && <OrderTrackingPage />}
+                </div>
+            );
+        }
+
+        /* ===========================================
+           APPLICATION INITIALIZATION
+           =========================================== */
+        
+        // Render the main App component to the DOM
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96c81a9981507f4d',t:'MTc1NDc1MTQyNi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
