@@ -511,9 +511,9 @@
                                     <input 
                                         type="text" 
                                         placeholder="Search products..."
-                                        className="w-64 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 form-input"
+                                        className="w-64 px-4 py-2 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all text-gray-800 bg-gray-50 focus:bg-white"
                                     />
-                                    <i className="fas fa-search absolute right-3 top-3 text-gray-400"></i>
+                                    <i className="fas fa-search absolute right-3 top-3 text-gray-500 hover:text-blue-600 transition-colors cursor-pointer"></i>
                                 </div>
 
                                 {/* Shopping cart button */}
@@ -666,10 +666,16 @@
                             <h1 className="text-5xl font-bold mb-4">Premium Electronics Store</h1>
                             <p className="text-xl mb-8 opacity-90">Discover the latest technology with unbeatable prices</p>
                             <div className="flex justify-center space-x-4">
-                                <button className="bg-white text-blue-600 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors">
+                                <button 
+                                    onClick={() => document.getElementById('products-section').scrollIntoView({ behavior: 'smooth' })}
+                                    className="bg-white text-blue-600 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors"
+                                >
                                     Shop Now
                                 </button>
-                                <button className="border-2 border-white text-white px-8 py-3 rounded-lg font-bold hover:bg-white hover:text-blue-600 transition-colors">
+                                <button 
+                                    onClick={() => document.getElementById('products-section').scrollIntoView({ behavior: 'smooth' })}
+                                    className="border-2 border-white text-white px-8 py-3 rounded-lg font-bold hover:bg-white hover:text-blue-600 transition-colors"
+                                >
                                     View Deals
                                 </button>
                             </div>
@@ -1054,7 +1060,6 @@
                     if (email && password) {
                         setUser({ email, name: email.split('@')[0] });
                         setCurrentView('home');
-                        alert('Login successful!');
                     }
                 };
 
@@ -1146,12 +1151,10 @@
                     
                     // Form validation
                     if (formData.password !== formData.confirmPassword) {
-                        alert('Passwords do not match!');
                         return;
                     }
                     
                     if (!formData.agreeToTerms) {
-                        alert('Please agree to the terms and conditions');
                         return;
                     }
 
@@ -1164,7 +1167,6 @@
                             phone: formData.phone
                         });
                         setCurrentView('home');
-                        alert('Account created successfully! Welcome to ElectroShop!');
                     }
                 };
 
@@ -1325,9 +1327,6 @@
                         setUser({ email, name: 'Admin' });
                         setIsAdmin(true);
                         setCurrentView('admin-dashboard');
-                        alert('Admin login successful!');
-                    } else {
-                        alert('Invalid admin credentials. Use admin@electroshop.com / admin123');
                     }
                 };
 
@@ -2027,21 +2026,17 @@
                         phone: profileData.phone
                     });
                     setIsEditing(false);
-                    alert('Profile updated successfully!');
                 };
 
                 // Handle password change
                 const handlePasswordChange = (e) => {
                     e.preventDefault();
                     if (passwordData.newPassword !== passwordData.confirmPassword) {
-                        alert('New passwords do not match!');
                         return;
                     }
                     if (passwordData.newPassword.length < 6) {
-                        alert('Password must be at least 6 characters long!');
                         return;
                     }
-                    alert('Password changed successfully!');
                     setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
                 };
 
@@ -2596,5 +2591,5 @@
         // Render the main App component to the DOM
         ReactDOM.render(<App />, document.getElementById('root'));
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96c835d2d3f39be7',t:'MTc1NDc1MjU0MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96c83c7b72249be7',t:'MTc1NDc1MjgxNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
