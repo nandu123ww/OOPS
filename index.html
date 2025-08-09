@@ -1059,54 +1059,70 @@
                 };
 
                 return (
-                    <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4">
-                        <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
-                            <h2 className="text-2xl font-bold text-center mb-6">Welcome Back</h2>
+                    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4">
+                        <div className="max-w-md w-full bg-white rounded-xl shadow-xl p-8 border border-gray-100">
+                            <div className="text-center mb-8">
+                                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i className="fas fa-user text-2xl text-blue-600"></i>
+                                </div>
+                                <h2 className="text-3xl font-bold text-gray-800 mb-2">Welcome Back</h2>
+                                <p className="text-gray-600">Sign in to your ElectroShop account</p>
+                            </div>
                             <form onSubmit={handleLogin}>
-                                <div className="mb-4">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                <div className="mb-6">
+                                    <label className="block text-gray-800 text-sm font-semibold mb-2">
                                         Email Address
                                     </label>
                                     <input 
                                         type="email"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all text-gray-800 bg-gray-50 focus:bg-white"
+                                        placeholder="Enter your email"
                                         required
                                     />
                                 </div>
                                 <div className="mb-6">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                    <label className="block text-gray-800 text-sm font-semibold mb-2">
                                         Password
                                     </label>
                                     <input 
                                         type="password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition-all text-gray-800 bg-gray-50 focus:bg-white"
+                                        placeholder="Enter your password"
                                         required
                                     />
                                 </div>
                                 <button 
                                     type="submit"
-                                    className="w-full btn-primary text-white py-2 px-4 rounded hover:shadow-lg transition-all"
+                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-semibold transition-all hover:shadow-lg transform hover:-translate-y-0.5"
                                 >
-                                    Sign In
+                                    <i className="fas fa-sign-in-alt mr-2"></i>Sign In
                                 </button>
                             </form>
-                            <div className="mt-4 text-center">
-                                <p className="text-gray-600 text-sm">
-                                    Demo: Use any email and password to login
-                                </p>
-                                <p className="text-gray-600 text-sm mt-2">
-                                    Don't have an account?{' '}
-                                    <button 
-                                        onClick={() => setCurrentView('signup')}
-                                        className="text-blue-600 hover:text-blue-800 font-medium transition-colors"
-                                    >
-                                        Create an account
-                                    </button>
-                                </p>
+                            <div className="mt-6">
+                                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                                    <div className="flex items-center mb-2">
+                                        <i className="fas fa-info-circle text-blue-600 mr-2"></i>
+                                        <span className="font-semibold text-blue-800">Demo Login</span>
+                                    </div>
+                                    <p className="text-blue-700 text-sm">
+                                        Use any email and password to login and explore the store features
+                                    </p>
+                                </div>
+                                <div className="text-center">
+                                    <p className="text-gray-600 text-sm">
+                                        Don't have an account?{' '}
+                                        <button 
+                                            onClick={() => setCurrentView('signup')}
+                                            className="text-blue-600 hover:text-blue-800 font-semibold transition-colors underline"
+                                        >
+                                            Create an account
+                                        </button>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1153,33 +1169,41 @@
                 };
 
                 return (
-                    <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4">
-                        <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
-                            <h2 className="text-2xl font-bold text-center mb-6">Create Account</h2>
+                    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center py-12 px-4">
+                        <div className="max-w-md w-full bg-white rounded-xl shadow-xl p-8 border border-gray-100">
+                            <div className="text-center mb-8">
+                                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i className="fas fa-user-plus text-2xl text-green-600"></i>
+                                </div>
+                                <h2 className="text-3xl font-bold text-gray-800 mb-2">Create Account</h2>
+                                <p className="text-gray-600">Join ElectroShop today</p>
+                            </div>
                             <form onSubmit={handleSignUp}>
                                 {/* Name fields */}
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                                     <div>
-                                        <label className="block text-gray-700 text-sm font-bold mb-2">
+                                        <label className="block text-gray-800 text-sm font-semibold mb-2">
                                             First Name
                                         </label>
                                         <input 
                                             type="text"
                                             value={formData.firstName}
                                             onChange={(e) => setFormData({...formData, firstName: e.target.value})}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-400 focus:ring-2 focus:ring-green-100 transition-all text-gray-800 bg-gray-50 focus:bg-white"
+                                            placeholder="First name"
                                             required
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-gray-700 text-sm font-bold mb-2">
+                                        <label className="block text-gray-800 text-sm font-semibold mb-2">
                                             Last Name
                                         </label>
                                         <input 
                                             type="text"
                                             value={formData.lastName}
                                             onChange={(e) => setFormData({...formData, lastName: e.target.value})}
-                                            className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-400 focus:ring-2 focus:ring-green-100 transition-all text-gray-800 bg-gray-50 focus:bg-white"
+                                            placeholder="Last name"
                                             required
                                         />
                                     </div>
@@ -1187,54 +1211,57 @@
                                 
                                 {/* Contact information */}
                                 <div className="mb-4">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                    <label className="block text-gray-800 text-sm font-semibold mb-2">
                                         Email Address
                                     </label>
                                     <input 
                                         type="email"
                                         value={formData.email}
                                         onChange={(e) => setFormData({...formData, email: e.target.value})}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-400 focus:ring-2 focus:ring-green-100 transition-all text-gray-800 bg-gray-50 focus:bg-white"
+                                        placeholder="Enter your email"
                                         required
                                     />
                                 </div>
                                 <div className="mb-4">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                    <label className="block text-gray-800 text-sm font-semibold mb-2">
                                         Phone Number (Optional)
                                     </label>
                                     <input 
                                         type="tel"
                                         value={formData.phone}
                                         onChange={(e) => setFormData({...formData, phone: e.target.value})}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-400 focus:ring-2 focus:ring-green-100 transition-all text-gray-800 bg-gray-50 focus:bg-white"
                                         placeholder="(555) 123-4567"
                                     />
                                 </div>
                                 
                                 {/* Password fields */}
                                 <div className="mb-4">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                    <label className="block text-gray-800 text-sm font-semibold mb-2">
                                         Password
                                     </label>
                                     <input 
                                         type="password"
                                         value={formData.password}
                                         onChange={(e) => setFormData({...formData, password: e.target.value})}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-400 focus:ring-2 focus:ring-green-100 transition-all text-gray-800 bg-gray-50 focus:bg-white"
+                                        placeholder="Create a password"
                                         required
                                         minLength="6"
                                     />
-                                    <p className="text-gray-500 text-xs mt-1">Password must be at least 6 characters</p>
+                                    <p className="text-gray-600 text-xs mt-1">Password must be at least 6 characters</p>
                                 </div>
                                 <div className="mb-4">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                    <label className="block text-gray-800 text-sm font-semibold mb-2">
                                         Confirm Password
                                     </label>
                                     <input 
                                         type="password"
                                         value={formData.confirmPassword}
                                         onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-green-400 focus:ring-2 focus:ring-green-100 transition-all text-gray-800 bg-gray-50 focus:bg-white"
+                                        placeholder="Confirm your password"
                                         required
                                         minLength="6"
                                     />
@@ -1261,7 +1288,7 @@
                                 
                                 <button 
                                     type="submit"
-                                    className="w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 transition-colors"
+                                    className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-semibold transition-all hover:shadow-lg transform hover:-translate-y-0.5"
                                 >
                                     <i className="fas fa-user-plus mr-2"></i>Create Account
                                 </button>
@@ -1305,45 +1332,58 @@
                 };
 
                 return (
-                    <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4">
-                        <div className="max-w-md w-full bg-white rounded-lg shadow-md p-8">
-                            <h2 className="text-2xl font-bold text-center mb-6">Admin Login</h2>
+                    <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-100 flex items-center justify-center py-12 px-4">
+                        <div className="max-w-md w-full bg-white rounded-xl shadow-xl p-8 border border-gray-100">
+                            <div className="text-center mb-8">
+                                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <i className="fas fa-shield-alt text-2xl text-red-600"></i>
+                                </div>
+                                <h2 className="text-3xl font-bold text-gray-800 mb-2">Admin Login</h2>
+                                <p className="text-gray-600">Administrative access only</p>
+                            </div>
                             <form onSubmit={handleAdminLogin}>
-                                <div className="mb-4">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                <div className="mb-6">
+                                    <label className="block text-gray-800 text-sm font-semibold mb-2">
                                         Admin Email
                                     </label>
                                     <input 
                                         type="email"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition-all text-gray-800 bg-gray-50 focus:bg-white"
+                                        placeholder="Enter admin email"
                                         required
                                     />
                                 </div>
                                 <div className="mb-6">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                    <label className="block text-gray-800 text-sm font-semibold mb-2">
                                         Admin Password
                                     </label>
                                     <input 
                                         type="password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500 form-input"
+                                        className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-red-400 focus:ring-2 focus:ring-red-100 transition-all text-gray-800 bg-gray-50 focus:bg-white"
+                                        placeholder="Enter admin password"
                                         required
                                     />
                                 </div>
                                 <button 
                                     type="submit"
-                                    className="w-full bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700 transition-colors"
+                                    className="w-full bg-red-600 hover:bg-red-700 text-white py-3 px-4 rounded-lg font-semibold transition-all hover:shadow-lg transform hover:-translate-y-0.5"
                                 >
-                                    Admin Login
+                                    <i className="fas fa-shield-alt mr-2"></i>Admin Login
                                 </button>
                             </form>
-                            <div className="mt-4 p-3 bg-yellow-100 rounded text-sm">
-                                <p><strong>Demo Credentials:</strong></p>
-                                <p>Email: admin@electroshop.com</p>
-                                <p>Password: admin123</p>
+                            <div className="mt-6 bg-amber-50 border border-amber-200 rounded-lg p-4">
+                                <div className="flex items-center mb-2">
+                                    <i className="fas fa-key text-amber-600 mr-2"></i>
+                                    <span className="font-semibold text-amber-800">Demo Credentials</span>
+                                </div>
+                                <div className="text-amber-700 text-sm space-y-1">
+                                    <p><strong>Email:</strong> admin@electroshop.com</p>
+                                    <p><strong>Password:</strong> admin123</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -2012,13 +2052,28 @@
 
                 return (
                     <div className="container mx-auto px-4 py-8">
-                        <div className="flex items-center mb-8">
-                            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-2xl font-bold text-blue-600 mr-4">
-                                {user?.name?.charAt(0)?.toUpperCase() || 'U'}
-                            </div>
-                            <div>
-                                <h2 className="text-3xl font-bold">My Account</h2>
-                                <p className="text-gray-600">Welcome back, {user?.name || 'User'}!</p>
+                        <div className="bg-gradient-to-r from-blue-50 to-indigo-100 rounded-xl p-6 mb-8">
+                            <div className="flex items-center">
+                                <div className="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center text-3xl font-bold text-blue-600 mr-6 shadow-lg">
+                                    {user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                                </div>
+                                <div className="flex-1">
+                                    <h2 className="text-3xl font-bold text-gray-800 mb-2">My Account</h2>
+                                    <p className="text-gray-700 text-lg mb-2">Welcome back, {user?.name || 'User'}!</p>
+                                    <div className="flex items-center text-sm text-gray-600">
+                                        <i className="fas fa-envelope mr-2"></i>
+                                        <span>{user?.email}</span>
+                                        <span className="mx-3">•</span>
+                                        <i className="fas fa-calendar mr-2"></i>
+                                        <span>Member since 2024</span>
+                                    </div>
+                                </div>
+                                <div className="text-right">
+                                    <div className="bg-white rounded-lg p-4 shadow-md">
+                                        <div className="text-2xl font-bold text-blue-600">{userOrders.length}</div>
+                                        <div className="text-sm text-gray-600">Total Orders</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -2541,5 +2596,5 @@
         // Render the main App component to the DOM
         ReactDOM.render(<App />, document.getElementById('root'));
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96c82bd54187c6ab',t:'MTc1NDc1MjEzMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96c835d2d3f39be7',t:'MTc1NDc1MjU0MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
